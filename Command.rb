@@ -35,7 +35,18 @@ class DeleteFile < Command
 	end
 
 	def execute
-		File.delete(@path)
+		if File.exists?(@path)
+			@contents = File.read(@path)
+		end
+		f = File.delete(@path)
+	end
+
+	def unexecute
+		if @contents
+			f = File.open(@path, "w")
+			f.write(@contents)
+			f.close
+		end
 	end
 end
 
@@ -63,6 +74,9 @@ class CompositeCommand < Command
 	def execute
 		@commands.each{|cmd| cmd.execute}
 	end
+
+	def unexecute
+		@commands.reverse.each{|cmd| cmd.unexecute}
 
 	def description
 		description = ''
