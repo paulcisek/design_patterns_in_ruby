@@ -1,1 +1,4 @@
-<z;-,891y9-z>8/7
+A plain line
+A line with checksum
+2015-07-30 19:03:01 +0200: with time stamp
+1: with line number
