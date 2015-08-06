@@ -1,4 +1,31 @@
 require 'find'
+def |(other)
+	Or.new(self, other)
+end
+	
+def &(other)
+	And.new(self, other)
+end
+
+def all
+	All.new
+end
+
+def bigger(size)
+	Bigger.new(size)
+end
+
+def file_name(pattern)
+	FileName.new(pattern)
+end
+
+def except(expression)
+	Not.new(expression)
+end
+
+def writable
+	Writable.new
+end
 
 class Expression
 	def |(other)
@@ -17,14 +44,14 @@ class Expression
 		Bigger.new(size)
 	end
 	
-	def name(pattern)
+	def file_name(pattern)
 		FileName.new(pattern)
 	end
 	
 	def except(expression)
 		Not.new(expression)
 	end
-	
+
 	def writable
 		Writable.new
 	end
@@ -32,6 +59,7 @@ end
 
 class All < Expression
 	def evaluate(dir)
+		puts dir
 		results=[]
 		Find.find(dir) do |p|
 			next unless File.file?(p)
@@ -157,40 +185,40 @@ class Parser
 	end
 end
 
-dir = '../design_patterns_in_ruby'
-expr_all = All.new
-files = expr_all.evaluate(dir)
+# dir = '../design_patterns_in_ruby'
+# expr_all = All.new
+# files = expr_all.evaluate(dir)
 
-puts "all files: #{files.count}"
+# puts "all files: #{files.count}"
 
-expr_txt = FileName.new('*.txt')
-txts = expr_txt.evaluate(dir)
+# expr_txt = FileName.new('*.txt')
+# txts = expr_txt.evaluate(dir)
 
-puts "all text files: #{txts.count}"
+# puts "all text files: #{txts.count}"
 
-expr_not_writable = Not.new(Writable.new)
-readonly_files = expr_not_writable.evaluate(dir)
+# expr_not_writable = Not.new(Writable.new)
+# readonly_files = expr_not_writable.evaluate(dir)
 
-puts "all readonly files: #{readonly_files.count}"
+# puts "all readonly files: #{readonly_files.count}"
 
-small_expr = Not.new( Bigger.new(1024) )
-small_files = small_expr.evaluate(dir)
+# small_expr = Not.new( Bigger.new(1024) )
+# small_files = small_expr.evaluate(dir)
 
-puts "all readonly files: #{small_files.count}"
+# puts "all readonly files: #{small_files.count}"
 
-big_or_mp3_expr = Or.new( Bigger.new(1024), FileName.new('*.mp3') )
-big_or_mp3s = big_or_mp3_expr.evaluate(dir)
+# big_or_mp3_expr = Or.new( Bigger.new(1024), FileName.new('*.mp3') )
+# big_or_mp3s = big_or_mp3_expr.evaluate(dir)
 
-complex_expression = And.new(
-	And.new(
-			Bigger.new(1024),
-			FileName.new('*.mp3')
-	),
-	Not.new(Writable.new )
-)
-complex = complex_expression.evaluate(dir)
+# complex_expression = And.new(
+# 	And.new(
+# 			Bigger.new(1024),
+# 			FileName.new('*.mp3')
+# 	),
+# 	Not.new(Writable.new )
+# )
+# complex = complex_expression.evaluate(dir)
 
-puts "all complex expression files: #{complex.count}"
+# puts "all complex expression files: #{complex.count}"
 
-parser = Parser.new "and (and(bigger 1024)(filename *.mp3)) writable"
-ast = parser.expression
+# parser = Parser.new "and (and(bigger 1024)(filename *.mp3)) writable"
+# ast = parser.expression

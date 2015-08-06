@@ -1,0 +1,5 @@
+backup '../design_patterns_in_ruby'
+backup '../design_patterns_in_ruby', file_name('*.mp3') & file_name('*.wav')
+backup '../design_patterns_in_ruby', except(file_name('*.tmp'))
+to 'external_drive'
+interval 60
